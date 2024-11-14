@@ -20,22 +20,22 @@ class StockAlgo(QCAlgorithm):
     #init parameters, variables, etc.
     def initialize(self): 
     
-        self.lookback = 10 #in days. Doesnt matter here it will change below
-        self.ceiling, self.floor = 40, 10 #set limits for lookback
+        self.lookback = 10 #in days
+        self.ceiling, self.floor = 360, 10 #set limits for lookback
         
-        self.SetStartDate(2018,8,22) # 3 year ago -> current
-        self.SetEndDate(2024,9,11)
+        self.SetStartDate(2019,11,14) # 5 years ago 
+        self.SetEndDate(2024,11,14) # current
         
-        self.SetCash(500000)        # $500,000 for backtesting
+        self.SetCash(100000)        # $100,000 for backtesting
         
         self.symbol = self.AddEquity("SPY", Resolution.Daily).Symbol #using daily data. SPY tracks S&P 500
 
-        self.initialStopRisk = 0.97 #allows 3% before stop order
-        self.trailingStopRisk = 0.91
+        self.initialStopRisk = 0.98 #allows 2% before stop order
+        self.trailingStopRisk = 0.94 # 6% stop order
         
 
-        # schedule for daily, after 10 minutes of market being open, using function everymarketopen
-        self.Schedule.On(self.DateRules.EveryDay(self.symbol), self.TimeRules.AfterMarketOpen(self.symbol, 10), Action(self.EveryMarketOpen))
+        # schedule for daily, after 30 minutes of market being open, using function everymarketopen
+        self.Schedule.On(self.DateRules.EveryDay(self.symbol), self.TimeRules.AfterMarketOpen(self.symbol, 30), Action(self.EveryMarketOpen))
                         
     def on_data(self, data):
         self.Plot("Data Chart", self.symbol, self.Securities[self.symbol].Close) #plot on data
